@@ -1,0 +1,252 @@
+import React, { createContext, useContext, useState, useEffect } from "react";
+import axios from "axios";
+
+// 1. Create context
+const userContext = createContext();
+
+// 2. AuthContext provider component
+const AuthContext = ({ children }) => {
+  const [user, setUser] = useState(null);       // store user object
+  const [loading, setLoading] = useState(true); // loading while verifying
+
+  useEffect(() => {
+    const verifyUser = async () => {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await axios.get("http://localhost:5000/api/auth/verify", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.data.success) {
+          setUser(response.data.user); // ✅ Set user if token is valid
+        } else {
+          setUser(null);               // ❌ Invalid response
+        }
+      } catch (error) {
+        console.error("Token verification failed:", error);
+        setUser(null);                 // ❌ Error occurred
+      } finally {
+        setLoading(false);             // ✅ Done verifying
+      }
+    };
+
+    verifyUser();
+  }, []);
+
+  // 3. Login function
+  const login = (user) => {
+    setUser(user);
+  };
+
+  // 4. Logout function
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem("token");
+  };
+
+  // 5. Provide context to children
+  return (
+    <userContext.Provider value={{ user, login, logout, loading }}>
+      {children}
+    </userContext.Provider>
+  );
+};
+
+// 6. Custom hook to use auth
+export const useAuth = () => useContext(userContext);
+
+export default AuthContext;
+
+-----------------------------------------------------------------------------------------
+
+
+
+import jwt from 'jsonwebtoken'
+import User from '../models/User.js'
+
+const verifyUser = async(req,res,next) =>{
+    try {
+        const token = req.headers.authorization.split(' ')[1]
+        console.log(token)
+        if(!token){
+            return res.status(404).json({
+                success : false,
+                error : 'Token not provided'
+            })
+        }
+
+        const decoded = jwt.verify(token,process.env.JWT_KEY)
+
+        if(!decoded){
+            return res.status(404).json({
+                success : false,
+                error : 'Token is not valid'
+            })
+        }
+        
+        const user = await User.findById({_id : decoded._id}).select('-password')
+
+        if(!user){
+            return res.status(404).json({
+                success : false,
+                error : 'user not found'
+            })
+        }
+
+        req.user = user
+        next()
+    } catch (error) {
+        return res.status(500).json({
+            success : false,
+            error : "Server side error"
+        })
+        
+    }
+}
+
+export default verifyUser
+
+
+--------------------------------------------------------------------------------
+
+import { useNavigate } from "react-router-dom";
+// ...existing code...
+
+useEffect(() => {
+  const verifyUser = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setUser(null);
+      setLoading(false);
+      // navigate("/login");
+      return;
+    }
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/verify",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.data.success) {
+        setUser(response.data.user);
+      } else {
+        setUser(null);
+        localStorage.removeItem("token");
+        // navigate("/login");
+      }
+    } catch (error) {
+      setUser(null);
+      localStorage.removeItem("token");
+      // navigate("/login");
+    } finally {
+      setLoading(false);
+    }
+  };
+  verifyUser();
+}, []);
+// ...existing code...
+
+
+
+......
+useEffect(()=>{
+    const verifyUser = async() =>{
+      try {
+        const token = localStorage.getItem('token')
+        const response = await axios.get('http://localhost:5000/api/auth/verify',{
+          headers : {
+            "Authorization" : `Bearer ${token}`
+          }
+        })
+        if(response.data.success){
+          setUser(response.data.user)
+        }else{
+          // navigate('/login')
+          setUser(null)
+          setLoading(false)
+          return
+        }
+        
+      } catch (error) {
+        console.log(error)  
+        if(error.response && !error.response.data.error){
+          // navigate('/login')
+          setUser(null)
+        }      
+      }finally{
+        setLoading(false)
+      }
+    }
+    verifyUser()
+
+  },[])
+
+
+
+  -------------------------------------------------------------------------
+
+
+  import React from 'react'
+
+const SummaryCard = ({icon, text,number, color}) => {
+  return (
+    <div className='rounded flex bg-white'>
+        <div className={`${color} text-3xl flex justify-center items-center text-white px-4`}>
+            {icon}
+        </div>
+        <div className='pl-4 py-1'>
+            <p className='text-lg font-semibold'>{text}</p>
+            <p className='text-xl font-bold'>{number}</p>
+        </div>
+    </div>
+  )
+}
+
+export default SummaryCard
+
+
+
+-------------------------------------------------------------------------------------
+
+
+import React from 'react'
+import SummaryCard from './SummaryCard'
+import { FaBuilding, FaCheckCircle, FaFileAlt, FaHourglassHalf, FaMoneyBillWave, FaTimesCircle, FaUser, FaUsers } from 'react-icons/fa'
+
+const AdminSummary = () => {
+  return (
+    <div className='p-6'>
+        <h1 className='text-2xl font-bold'>Dashboard Overview</h1>
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mt-6'>
+            <SummaryCard icon = {<FaUsers/>} text="Total Employees" number = {13} color = "bg-teal-600"/>
+            <SummaryCard icon = {<FaBuilding/>} text="Total Departments" number = {5} color = "bg-yellow-600"/>
+            <SummaryCard icon = {<FaMoneyBillWave/>} text="Monthly Salary" number = "$645" color = "bg-red-600"/>
+        </div>
+
+        <div className='mt-12'>
+            <h4 className='text-center text-2xl font-bold'>Leave Details</h4>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-12 mt-6'>
+                <SummaryCard icon={<FaFileAlt />} text="Leave Applied" number={5} color="bg-teal-600"/>
+                <SummaryCard icon={<FaCheckCircle />} text="Leave Approved" number={2} color="bg-green-600"/>
+                <SummaryCard icon={<FaHourglassHalf />} text="Leave Pending" number={5} color="bg-yellow-600"/>
+                <SummaryCard icon={<FaTimesCircle />} text="Leave Rejected" number={1} color="bg-red-600"/>
+            </div>
+        </div>
+    </div>
+  )
+}
+
+export default AdminSummary
