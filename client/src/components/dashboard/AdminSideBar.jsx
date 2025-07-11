@@ -24,8 +24,9 @@ const AdminSideBar = () => {
               isActive
                 ? "bg-teal-500 text-white"
                 : "text-gray-200 hover:bg-gray-700"
-            } flex items-center space-x-4 py-2.5 px-4 rounded`
-          }        >
+            } flex items-center space-x-4 py-2.5 px-4 rounded `
+          }     
+          end>
           <FaTachometer />
           <span>Dashboard</span>
         </NavLink>
@@ -34,11 +35,18 @@ const AdminSideBar = () => {
           className="flex items-center space-x-4 py-2.5 px-4 rounded"
         >
           <FaUsers />
-          <span>DashBoard</span>
+          <span>Employees</span>
         </NavLink>
         <NavLink
-          to="/admin-dashboard"
-          className="flex items-center space-x-4 py-2.5 px-4 rounded"
+          to="/admin-dashboard/departments"
+          // className="flex items-center space-x-4 py-2.5 px-4 rounded"
+          className={({ isActive }) =>
+            `${
+              isActive
+                ? "bg-teal-500 text-white"
+                : "text-gray-200 hover:bg-gray-700"
+            } flex items-center space-x-4 py-2.5 px-4 rounded`
+          }       
         >
           <FaBuilding />
           <span>Department</span>

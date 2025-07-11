@@ -9,5 +9,4 @@ createRoot(document.getElementById('root')).render(
   <AuthContext>
     <App />
   </AuthContext>
-  
 )

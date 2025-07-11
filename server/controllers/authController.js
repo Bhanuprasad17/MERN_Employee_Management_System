@@ -49,5 +49,4 @@ const verifyMethod = (req, res) =>{
   })
 }
 
-
-export { login,verifyMethod };
+export { login,verifyMethod };   
