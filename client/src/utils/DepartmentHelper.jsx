@@ -16,7 +16,7 @@ export const columns = [
 ]
 
 
-export const DepartmentButtons = () =>{
+export const DepartmentButtons = ({_id}) =>{
     return (
         <div className="flex space-x-3">
             <button className="px-3 py-1 bg-teal-600 text-white">Edit</button>
