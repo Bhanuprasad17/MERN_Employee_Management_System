@@ -13,22 +13,98 @@ import {
 
 const AdminSummary = () => {
   return (
-    <div className='p-6'>
-      <h1 className='text-2xl font-bold'>Dashboard Overview</h1>
+    <div className='min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 p-8'>
+      <div className='max-w-7xl mx-auto'>
+        {/* Header Section */}
+        <div className='mb-12'>
+          <div className='border-l-4 border-indigo-600 pl-6'>
+            <h1 className='text-4xl font-bold text-gray-800 tracking-tight'>
+              Dashboard Overview
+            </h1>
+            <p className='text-lg text-gray-600 mt-2 font-medium'>
+              Executive Summary & Key Metrics
+            </p>
+          </div>
+        </div>
 
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-4 mt-6'>
-        <SummaryCard icon={<FaUsers />} text="Total Employees" number={13} color="bg-teal-600" />
-        <SummaryCard icon={<FaBuilding />} text="Total Departments" number={5} color="bg-yellow-600" />
-        <SummaryCard icon={<FaMoneyBillWave />} text="Monthly Salary" number="$645" color="bg-red-600" />
-      </div>
+        {/* Main Stats Grid */}
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-8 mb-16'>
+          <SummaryCard 
+            icon={<FaUsers />} 
+            text="Total Employees" 
+            number={13} 
+            color="from-blue-600 to-blue-700"
+            bgAccent="bg-blue-50"
+            borderAccent="border-blue-200"
+          />
+          <SummaryCard 
+            icon={<FaBuilding />} 
+            text="Total Departments" 
+            number={5} 
+            color="from-amber-600 to-amber-700"
+            bgAccent="bg-amber-50"
+            borderAccent="border-amber-200"
+          />
+          <SummaryCard 
+            icon={<FaMoneyBillWave />} 
+            text="Monthly Salary" 
+            number="$645" 
+            color="from-emerald-600 to-emerald-700"
+            bgAccent="bg-emerald-50"
+            borderAccent="border-emerald-200"
+          />
+        </div>
 
-      <div className='mt-12'>
-        <h4 className='text-center text-2xl font-bold'>Leave Details</h4>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-8 mt-6'>
-          <SummaryCard icon={<FaFileAlt />} text="Leave Applied" number={5} color="bg-teal-600" />
-          <SummaryCard icon={<FaCheckCircle />} text="Leave Approved" number={2} color="bg-green-600" />
-          <SummaryCard icon={<FaHourglassHalf />} text="Leave Pending" number={5} color="bg-yellow-600" />
-          <SummaryCard icon={<FaTimesCircle />} text="Leave Rejected" number={1} color="bg-red-600" />
+        {/* Leave Management Section */}
+        <div className='bg-white rounded-2xl shadow-xl border border-gray-200 p-8'>
+          <div className='text-center mb-10'>
+            <h2 className='text-3xl font-bold text-gray-800 mb-3'>
+              Leave Management
+            </h2>
+            <div className='w-24 h-1 bg-gradient-to-r from-indigo-500 to-purple-600 mx-auto rounded-full'></div>
+            <p className='text-gray-600 mt-4 text-lg'>
+              Comprehensive leave tracking and analytics
+            </p>
+          </div>
+
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
+            <SummaryCard 
+              icon={<FaFileAlt />} 
+              text="Leave Applied" 
+              number={5} 
+              color="from-blue-600 to-blue-700"
+              bgAccent="bg-blue-50"
+              borderAccent="border-blue-200"
+              compact={true}
+            />
+            <SummaryCard 
+              icon={<FaCheckCircle />} 
+              text="Leave Approved" 
+              number={2} 
+              color="from-green-600 to-green-700"
+              bgAccent="bg-green-50"
+              borderAccent="border-green-200"
+              compact={true}
+            />
+            <SummaryCard 
+              icon={<FaHourglassHalf />} 
+              text="Leave Pending" 
+              number={5} 
+              color="from-yellow-600 to-yellow-700"
+              bgAccent="bg-yellow-50"
+              borderAccent="border-yellow-200"
+              compact={true}
+            />
+            <SummaryCard 
+              icon={<FaTimesCircle />} 
+              text="Leave Rejected" 
+              number={1} 
+              color="from-red-600 to-red-700"
+              bgAccent="bg-red-50"
+              borderAccent="border-red-200"
+              compact={true}
+            />
+          </div>
         </div>
       </div>
     </div>
