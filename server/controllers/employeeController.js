@@ -159,15 +159,23 @@ const updateEmployee = async (req, res) => {
 };
 
 
-const fetchEmployeesByDepId = async(req,res) =>{
-   try {
+const fetchEmployeesByDepId = async(req, res) => {
+  try {
     const { id } = req.params;
+    console.log("Fetching employees for department ID:", id);
+    
     const employees = await Employee.find({ department: id })
+      .populate('userId', 'name')
+      .populate('department', 'dep_name');
+    
+    console.log("Found employees:", employees);
+    
     return res.status(200).json({
       success: true,
       employees,
     });
   } catch (error) {
+    console.error("Error fetching employees by department:", error);
     return res.status(500).json({
       success: false,
       error: "Get EmployeeByDepId Server Error",

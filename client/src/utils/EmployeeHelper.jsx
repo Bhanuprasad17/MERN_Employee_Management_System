@@ -74,9 +74,11 @@ export const fetchEmployees = async (id) => {
     if (error.response && !error.response.data.success) {
       alert(error.response.data.error);
     }
+    console.error("Fetch employees error:", error);
   }
   return employees;
 };
+
 
 export const EmployeeButtons = ({ Id, onEmployeeDelete }) => {
   const navigate = useNavigate();
@@ -111,7 +113,7 @@ export const EmployeeButtons = ({ Id, onEmployeeDelete }) => {
   };
 
   const handleSalary = () => {
-    navigate(`/admin-dashboard/employee/salary/${Id}`);
+    navigate(`/admin-dashboard/employees/salary/${Id}`);
   };
 
   const handleLeave = () => {
