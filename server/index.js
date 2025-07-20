@@ -5,9 +5,14 @@ import authRouter from './routes/auth.js'
 import departmentRouter from './routes/department.js'
 import employeeRouter from './routes/employee.js'
 import connectToDatabase from './db/db.js'
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 
 connectToDatabase()
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express()
 dotenv.config()
@@ -16,7 +21,8 @@ app.use(cors())
 app.use(express.json())
 
 // app.use(express.static('public/uploads'))
-app.use('/uploads', express.static('uploads'))
+// app.use('/uploads', express.static('uploads'))
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 app.use('/api/auth',authRouter)
 app.use('/api/department',departmentRouter)
 app.use('/api/employee',employeeRouter)
