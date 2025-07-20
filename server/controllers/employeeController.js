@@ -101,7 +101,7 @@ const getEmployee = async (req, res) => {
     const employee = await Employee.findById({ _id: id })
       .populate("userId", { password: 0 })
       .populate("department");
-    console.log(employee);
+    // console.log(employee);
     return res.status(200).json({
       success: true,
       employee,
@@ -117,7 +117,7 @@ const getEmployee = async (req, res) => {
 const updateEmployee = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, maritalStatus, designation, department, salary } = req.body;
+    const { name, maritalStatus, designation, department, salary, role } = req.body;
 
     // Step 1: Check if employee exists
     const employee = await Employee.findById(id);
@@ -128,8 +128,8 @@ const updateEmployee = async (req, res) => {
       });
     }
 
-    // Step 2: Update the User (name and image if updated)
-    const userUpdateData = { name };
+    // Step 2: Update the User (name, role, and image if updated)
+    const userUpdateData = { name, role };
     if (req.file) {
       userUpdateData.profileImage = req.file.filename;
     }
@@ -159,4 +159,21 @@ const updateEmployee = async (req, res) => {
 };
 
 
-export { addEmployee, upload, getEmployees, getEmployee, updateEmployee };
+const fetchEmployeesByDepId = async(req,res) =>{
+   try {
+    const { id } = req.params;
+    const employees = await Employee.find({ department: id })
+    return res.status(200).json({
+      success: true,
+      employees,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: "Get EmployeeByDepId Server Error",
+    });
+  }
+}
+
+
+export { addEmployee, upload, getEmployees, getEmployee, updateEmployee, fetchEmployeesByDepId };

@@ -58,6 +58,26 @@ export const fetchDepartments = async () => {
   return departments;
 };
 
+// employees fro salary form
+export const fetchEmployees = async (id) => {
+  let employees;
+  try {
+    const response = await axios.get(`http://localhost:3000/api/employee/department/${id}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    if (response.data.success) {
+      employees = response.data.employees;
+    }
+  } catch (error) {
+    if (error.response && !error.response.data.success) {
+      alert(error.response.data.error);
+    }
+  }
+  return employees;
+};
+
 export const EmployeeButtons = ({ Id, onEmployeeDelete }) => {
   const navigate = useNavigate();
 

@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { fetchDepartments } from "../../utils/EmployeeHelper";
+import { fetchDepartments, fetchEmployees } from "../../utils/EmployeeHelper";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 
-const Edit = () => {
+const Add = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [employee, setEmployee] = useState(null);
+  const [employee, setEmployee] = useState({
+    employeeId : null,
+    basicSalary : 0,
+    allowances : 0,
+    salary : 0,
+    deductions : 0,
+    payDate : null
+  });
   const [departments, setDepartments] = useState(null);
-  const [formData, setFormData] = useState({});
+//   const [formData, setFormData] = useState({});
+  const [employees, setEmployees] = useState(null)
+
+
 
   useEffect(() => {
     const fetchEmployee = async () => {
@@ -50,6 +60,15 @@ const Edit = () => {
     fetchEmployee();
     getDepartments();
   }, [id]);
+
+  const handleDepartment = async() =>{
+    try {
+        const emps = await fetchEmployees(e.target.value)
+        setEmployees(emps)
+    } catch (error) {
+        
+    }
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -92,7 +111,7 @@ const Edit = () => {
           <div className="w-full max-w-5xl">
             <div className="text-center mb-8">
               <h1 className="text-4xl font-bold text-gray-800 mb-3">
-                Edit Employee
+                Add Salary
               </h1>
               <div className="w-24 h-1 bg-gradient-to-r from-teal-500 to-blue-600 mx-auto rounded-full"></div>
               <p className="text-gray-600 mt-4 text-lg">
@@ -118,77 +137,12 @@ const Edit = () => {
               <div className="p-8">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name || ""}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 bg-gray-50 hover:bg-white"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Marital Status</label>
-                      <select
-                        name="maritalStatus"
-                        onChange={handleChange}
-                        value={formData.maritalStatus || ""}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 bg-gray-50 hover:bg-white"
-                        required
-                      >
-                        <option value="">Select Status</option>
-                        <option value="single">Single</option>
-                        <option value="married">Married</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Designation</label>
-                      <input
-                        type="text"
-                        name="designation"
-                        value={formData.designation || ""}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 bg-gray-50 hover:bg-white"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Role</label>
-                      <select
-                        name="role"
-                        onChange={handleChange}
-                        value={formData.role || ""}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 bg-gray-50 hover:bg-white"
-                        required
-                      >
-                        <option value="">Select Role</option>
-                        <option value="admin">Admin</option>
-                        <option value="employee">Employee</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">Salary</label>
-                      <input
-                        type="number"
-                        name="salary"
-                        value={formData.salary || ""}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 bg-gray-50 hover:bg-white"
-                        required
-                      />
-                    </div>
 
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">Department</label>
                       <select
                         name="department"
-                        onChange={handleChange}
+                        onChange={handleDepartment}
                         value={formData.department || ""}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 bg-gray-50 hover:bg-white"
                         required
@@ -199,6 +153,71 @@ const Edit = () => {
                         ))}
                       </select>
                     </div>
+
+
+                     {/* Employee */}
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Employee</label>
+                      <select
+                        name="employeeId"
+                        onChange={handleChange}
+                        // value={formData.department || ""}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 bg-gray-50 hover:bg-white"
+                        required
+                      >
+                        <option value="">Select Employee</option>
+                        {employees.map((emp) => (
+                          <option value={emp._id} key={emp._id}>{emp.employeeId}</option>
+                        ))}
+                      </select>
+                    </div>
+
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Basic Salary</label>
+                      <input
+                        type="number"
+                        name="basicSalary"
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 bg-gray-50 hover:bg-white"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Allowance</label>
+                      <input
+                        type="number"
+                        name="allowance"
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 bg-gray-50 hover:bg-white"
+                        required
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Deductions</label>
+                      <input
+                        type="number"
+                        name="deductions"
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 bg-gray-50 hover:bg-white"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Pay Date</label>
+                      <input
+                        type="date"
+                        name="payDate"
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 bg-gray-50 hover:bg-white"
+                        required
+                      />
+                    </div>
+
                   </div>
 
                   <div className="flex gap-4 pt-6">
@@ -228,4 +247,4 @@ const Edit = () => {
   );
 };
 
-export default Edit;
+export default Add;
