@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useAuth } from "../context/authContext";
+import { useAuth } from "../context/AuthContext";
 import { toast, ToastContainer } from "react-toastify";
 import AdminSideBar from "../components/dashboard/AdminSideBar";
 import Navbar from "../components/dashboard/Navbar";

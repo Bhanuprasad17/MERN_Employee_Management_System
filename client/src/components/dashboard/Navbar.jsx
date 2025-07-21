@@ -1,6 +1,5 @@
-
 import React, { useState } from "react";
-import { useAuth } from "../../context/authContext";
+import { useAuth } from "../../context/AuthContext";
 import {
   FaUser,
   FaSignOutAlt,
@@ -99,52 +98,41 @@ const Navbar = () => {
           {/* Premium Dropdown Menu - Desktop only */}
           {showDropdown && (
             <>
-              {/* Backdrop */}
+              {/* Transparent Backdrop */}
               <div
-                className="fixed inset-0 z-10 bg-black bg-opacity-20 backdrop-blur-sm"
+                className="fixed inset-0 z-10 bg-transparent"
                 onClick={() => setShowDropdown(false)}
               />
 
-              {/* Dropdown Content */}
-              <div className="absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-2xl py-2 z-20 border border-slate-200 overflow-hidden">
-                {/* User Info */}
-                <div className="px-6 py-4 bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full flex items-center justify-center shadow-lg">
-                      <FaUser className="text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-bold text-slate-800">
-                        {user?.name || "User"}
-                      </p>
-                      <p className="text-xs text-slate-600">
-                        {user?.email || "user@example.com"}
-                      </p>
-                      <p className="text-xs text-amber-600 font-medium">Administrator</p>
-                    </div>
+              {/* Dropdown Content - Compact Version */}
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-1 z-20 border border-slate-200 overflow-hidden">
+                {/* Compact Menu Items */}
+                <div className="py-1">
+                  <div className="px-4 py-2 border-b border-slate-100">
+                    <p className="text-xs font-semibold text-slate-800 truncate">
+                      {user?.name || "User"}
+                    </p>
+                    <p className="text-xs text-amber-600">Administrator</p>
                   </div>
-                </div>
 
-                {/* Menu Items */}
-                <div className="py-2">
-                  <button className="w-full flex items-center space-x-3 px-6 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-all duration-200 border-l-4 border-transparent hover:border-amber-400">
-                    <FaUser className="text-slate-400" />
-                    <span className="font-medium">Profile Settings</span>
+                  <button className="w-full flex items-center space-x-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 transition-colors">
+                    <FaUser className="text-slate-400 text-xs" />
+                    <span>Profile</span>
                   </button>
 
-                  <button className="w-full flex items-center space-x-3 px-6 py-3 text-sm text-slate-700 hover:bg-slate-50 transition-all duration-200 border-l-4 border-transparent hover:border-amber-400">
-                    <FaCog className="text-slate-400" />
-                    <span className="font-medium">Preferences</span>
+                  <button className="w-full flex items-center space-x-2 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 transition-colors">
+                    <FaCog className="text-slate-400 text-xs" />
+                    <span>Settings</span>
                   </button>
 
-                  <hr className="my-2 border-slate-200" />
+                  <hr className="my-1 border-slate-200" />
 
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center space-x-3 px-6 py-3 text-sm text-red-600 hover:bg-red-50 transition-all duration-200 border-l-4 border-transparent hover:border-red-400"
+                    className="w-full flex items-center space-x-2 px-4 py-2 text-xs text-red-600 hover:bg-red-50 transition-colors"
                   >
-                    <FaSignOutAlt className="text-red-500" />
-                    <span className="font-medium">Sign Out</span>
+                    <FaSignOutAlt className="text-red-500 text-xs" />
+                    <span>Sign Out</span>
                   </button>
                 </div>
               </div>
@@ -156,6 +144,4 @@ const Navbar = () => {
   );
 };
 
-
-
-export default Navbar
+export default Navbar;
