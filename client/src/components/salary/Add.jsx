@@ -248,7 +248,7 @@ const Add = () => {
               <div className="flex gap-4 pt-6">
                 <button
                   type="button"
-                  onClick={() => navigate("/admin-dashboard/salary")}
+                  onClick={() => navigate("/admin-dashboard/employees")}
                   className="flex-1 bg-gray-100 text-gray-700 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-all duration-200 border border-gray-300"
                 >
                   Cancel
