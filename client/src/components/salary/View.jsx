@@ -1,4 +1,3 @@
-
 import axios from 'axios'
 import React from 'react'
 import { useEffect } from 'react'
@@ -6,22 +5,21 @@ import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 
 const View = () => {
-    const [salaries, setSalaries] = useState(null)
-    const [filteredSalaries, setFilteredSalaries] = useState(null)
+    const [salaries, setSalaries] = useState([])
+    const [filteredSalaries, setFilteredSalaries] = useState([])
     const [searchQuery, setSearchQuery] = useState('')
     const [loading, setLoading] = useState(true)
     const [employee, setEmployee] = useState(null)
+    const [error, setError] = useState(null)
     const { id } = useParams()
     const navigate = useNavigate()
-
-    let sno = 1
 
     const fetchSalaries = async () => {
         try {
             setLoading(true)
+            setError(null)
             console.log("Fetching salaries for employee ID:", id)
             
-            // Fixed URL to match your backend port
             const response = await axios.get(`http://localhost:3000/api/salary/${id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -31,29 +29,43 @@ const View = () => {
             console.log("API Response:", response.data)
             
             if (response.data.success) {
-                setSalaries(response.data.salary)
-                setFilteredSalaries(response.data.salary)
+                let salaryData = response.data.salary || [];
+                
+                // Ensure it's always an array
+                if (!Array.isArray(salaryData)) {
+                    salaryData = salaryData ? [salaryData] : [];
+                }
+                
+                console.log("Processed salary data:", salaryData);
+                
+                setSalaries(salaryData)
+                setFilteredSalaries(salaryData)
                 
                 // Get employee info from the first salary record
-                if (response.data.salary && response.data.salary.length > 0) {
-                    setEmployee(response.data.salary[0].employeeId)
-                    console.log("Employee info:", response.data.salary[0].employeeId)
+                if (salaryData.length > 0 && salaryData[0].employeeId) {
+                    setEmployee(salaryData[0].employeeId)
+                    console.log("Employee info:", salaryData[0].employeeId)
                 }
             } else {
                 console.error("API returned success: false")
-                alert("Failed to fetch salary records")
+                setError("Failed to fetch salary records")
+                setSalaries([])
+                setFilteredSalaries([])
             }
         } catch (error) {
             console.error('Fetch salaries error:', error)
+            setSalaries([])
+            setFilteredSalaries([])
+            
             if (error.response) {
                 console.error("Error response:", error.response.data)
-                alert(error.response.data.error || 'Failed to fetch salary records')
+                setError(error.response.data.error || error.response.data.message || 'Failed to fetch salary records')
             } else if (error.request) {
                 console.error("Network error:", error.request)
-                alert('Network error - please check if the server is running')
+                setError('Network error - please check if the server is running')
             } else {
                 console.error("Error:", error.message)
-                alert('An unexpected error occurred')
+                setError('An unexpected error occurred')
             }
         } finally {
             setLoading(false)
@@ -64,20 +76,25 @@ const View = () => {
         fetchSalaries();
     }, [id])
 
-    const filteredSlaries = (q) => {
+    // Fixed function name from filteredSlaries to filteredSalaries
+    const filterSalaries = (q) => {
         if (!q.trim()) {
             setFilteredSalaries(salaries)
             return
         }
         
-        const filtered = salaries?.filter(salary => {
+        const filtered = salaries.filter(salary => {
             const payDate = new Date(salary.payDate).toLocaleDateString()
             const netSalary = salary.netSalary?.toString() || '0'
             const basicSalary = salary.basicSalary?.toString() || '0'
+            const allowances = salary.allowances?.toString() || '0'
+            const deductions = salary.deductions?.toString() || '0'
             
             return payDate.toLowerCase().includes(q.toLowerCase()) ||
                    netSalary.includes(q) ||
-                   basicSalary.includes(q)
+                   basicSalary.includes(q) ||
+                   allowances.includes(q) ||
+                   deductions.includes(q)
         })
         
         setFilteredSalaries(filtered)
@@ -86,7 +103,7 @@ const View = () => {
     const handleSearchChange = (e) => {
         const query = e.target.value
         setSearchQuery(query)
-        filteredSlaries(query)
+        filterSalaries(query)
     }
 
     const formatCurrency = (amount) => {
@@ -99,11 +116,31 @@ const View = () => {
 
     const formatDate = (dateString) => {
         if (!dateString) return 'N/A'
-        return new Date(dateString).toLocaleDateString('en-IN', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric'
-        })
+        try {
+            return new Date(dateString).toLocaleDateString('en-IN', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            })
+        } catch (error) {
+            return 'Invalid Date'
+        }
+    }
+
+    const getLatestPayDate = () => {
+        if (!filteredSalaries || filteredSalaries.length === 0) return 'N/A'
+        try {
+            const dates = filteredSalaries
+                .map(s => new Date(s.payDate))
+                .filter(date => !isNaN(date))
+            
+            if (dates.length === 0) return 'N/A'
+            
+            const latestDate = new Date(Math.max(...dates))
+            return formatDate(latestDate)
+        } catch (error) {
+            return 'N/A'
+        }
     }
 
     if (loading) {
@@ -112,6 +149,36 @@ const View = () => {
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-teal-600 mx-auto"></div>
                     <p className="mt-4 text-gray-600 text-lg">Loading salary records...</p>
+                </div>
+            </div>
+        )
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 flex items-center justify-center p-6">
+                <div className="bg-white rounded-2xl shadow-xl border border-red-200 p-8 text-center max-w-md w-full">
+                    <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h3 className="text-xl font-semibold text-red-700 mb-2">Error Loading Data</h3>
+                    <p className="text-red-600 mb-4">{error}</p>
+                    <div className="flex gap-3 justify-center">
+                        <button
+                            onClick={fetchSalaries}
+                            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-200"
+                        >
+                            Retry
+                        </button>
+                        <button
+                            onClick={() => navigate(-1)}
+                            className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-semibold transition-all duration-200"
+                        >
+                            Go Back
+                        </button>
+                    </div>
                 </div>
             </div>
         )
@@ -158,7 +225,7 @@ const View = () => {
                                 type="text"
                                 value={searchQuery}
                                 onChange={handleSearchChange}
-                                placeholder="Search by date, salary amount..."
+                                placeholder="Search by date, salary amount, allowances, deductions..."
                                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200"
                             />
                         </div>
@@ -170,7 +237,8 @@ const View = () => {
                     <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                         <p className="text-sm text-yellow-800">
                             <strong>Debug Info:</strong> Employee ID: {id}, 
-                            Records Found: {salaries?.length || 0}, 
+                            Total Records: {salaries.length}, 
+                            Filtered Records: {filteredSalaries.length}, 
                             Employee Data: {employee ? 'Loaded' : 'Not loaded'}
                         </p>
                     </div>
@@ -188,13 +256,26 @@ const View = () => {
                         <p className="text-gray-500">
                             {searchQuery ? 'No records match your search criteria.' : 'No salary records available for this employee.'}
                         </p>
+                        {searchQuery && (
+                            <button
+                                onClick={() => {
+                                    setSearchQuery('')
+                                    setFilteredSalaries(salaries)
+                                }}
+                                className="mt-4 bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-200"
+                            >
+                                Clear Search
+                            </button>
+                        )}
                     </div>
                 ) : (
                     <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
                         {/* Table Header */}
                         <div className="bg-gradient-to-r from-teal-600 to-teal-700 px-6 py-4">
                             <h2 className="text-xl font-bold text-white">Salary History</h2>
-                            <p className="text-teal-100 text-sm">Total Records: {filteredSalaries.length}</p>
+                            <p className="text-teal-100 text-sm">
+                                {searchQuery ? `Showing ${filteredSalaries.length} of ${salaries.length} records` : `Total Records: ${filteredSalaries.length}`}
+                            </p>
                         </div>
 
                         {/* Desktop Table */}
@@ -316,7 +397,7 @@ const View = () => {
                             <div className="text-center p-4 bg-teal-50 rounded-lg">
                                 <p className="text-sm text-teal-600 font-medium">Latest Pay</p>
                                 <p className="text-2xl font-bold text-teal-800">
-                                    {formatDate(Math.max(...filteredSalaries.map(s => new Date(s.payDate))))}
+                                    {getLatestPayDate()}
                                 </p>
                             </div>
                         </div>
