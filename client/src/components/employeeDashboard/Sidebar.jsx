@@ -1,6 +1,8 @@
 
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+// import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/authContext";
 import {
   FaBuilding,
   FaCalendarAlt,
@@ -11,7 +13,6 @@ import {
   FaBars,
   FaTimes,
 } from "react-icons/fa";
-import { useAuth } from "../../context/AuthContext";
 
 const Sidebar = () => {
 

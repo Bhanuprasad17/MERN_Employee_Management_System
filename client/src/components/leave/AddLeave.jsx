@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/authContext';
+import axios from 'axios';
 
 const AddLeave = () => {
+  const {user} = useAuth()
   const [formData, setFormData] = useState({
+    userId : user._id,
     leaveType: '',
-    fromDate: '',
-    toDate: '',
-    description: ''
+    startDate: '',
+    endDate: '',
+    reason: ''
   });
   
   const navigate = useNavigate();
@@ -28,36 +32,60 @@ const AddLeave = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    // Basic form validation
-    if (!formData.leaveType || formData.leaveType === 'Select Leave Type') {
-      alert('Please select a leave type');
-      return;
-    }
-    
-    if (!formData.fromDate || !formData.toDate) {
-      alert('Please select both from and to dates');
-      return;
-    }
-    
-    if (new Date(formData.fromDate) > new Date(formData.toDate)) {
-      alert('From date cannot be later than to date');
-      return;
-    }
-    
-    if (!formData.description.trim()) {
-      alert('Please provide a description');
-      return;
-    }
-    
-    console.log('Leave request submitted:', formData);
-    // Handle form submission here
-    // You might want to navigate to success page or show success message
-    // navigate('/employee-dashboard/leaves');
-  };
+ const handleSubmit = (e) => {
+  e.preventDefault();
+  
+  // Basic form validation
+  if (!formData.leaveType || formData.leaveType === 'Select Leave Type') {
+    alert('Please select a leave type');
+    return;
+  }
+  
+  if (!formData.startDate || !formData.endDate) {
+    alert('Please select both from and to dates');
+    return;
+  }
+  
+  if (new Date(formData.startDate) > new Date(formData.endDate)) {
+    alert('From date cannot be later than to date');
+    return;
+  }
+  
+  if (!formData.reason.trim()) {
+    alert('Please provide a description');
+    return;
+  }
+  
+  console.log('Leave request submitted:', formData);
 
+  const submitLeaveRequest = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/api/leave/add`,
+        formData, // Send the form data as the request body
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            'Content-Type': 'application/json'
+          },
+        }
+      );
+      
+      if (response.data.success) {
+        navigate('/employee-dashboard/leaves');
+      }
+    } catch (error) {
+      if (error.response && !error.response.data.success) {
+        alert(error.response.data.error);
+      } else {
+        alert('An error occurred while submitting the leave request');
+        console.error('Error:', error);
+      }
+    }
+  };
+  
+  submitLeaveRequest();
+};
   const handleBack = () => {
     navigate('/employee-dashboard/leaves');
   };
@@ -150,16 +178,16 @@ const AddLeave = () => {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* From Date */}
                 <div className="group">
-                  <label htmlFor="fromDate" className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
+                  <label htmlFor="startDate" className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
                     <div className="w-2 h-2 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full"></div>
                     From Date
                   </label>
                   <div className="relative">
                     <input
                       type="date"
-                      id="fromDate"
-                      name="fromDate"
-                      value={formData.fromDate}
+                      id="startDate"
+                      name="startDate"
+                      value={formData.startDate}
                       onChange={handleInputChange}
                       className="w-full px-6 py-4 pl-14 bg-gradient-to-r from-slate-50 to-emerald-50 border-2 border-slate-200 rounded-2xl focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all duration-300 text-slate-700 font-medium shadow-sm hover:shadow-md group-hover:border-emerald-300"
                       required
@@ -176,16 +204,16 @@ const AddLeave = () => {
 
                 {/* To Date */}
                 <div className="group">
-                  <label htmlFor="toDate" className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
+                  <label htmlFor="endDate" className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
                     <div className="w-2 h-2 bg-gradient-to-r from-rose-400 to-pink-400 rounded-full"></div>
                     To Date
                   </label>
                   <div className="relative">
                     <input
                       type="date"
-                      id="toDate"
-                      name="toDate"
-                      value={formData.toDate}
+                      id="endDate"
+                      name="endDate"
+                      value={formData.endDate}
                       onChange={handleInputChange}
                       className="w-full px-6 py-4 pl-14 bg-gradient-to-r from-slate-50 to-rose-50 border-2 border-slate-200 rounded-2xl focus:ring-4 focus:ring-rose-500/20 focus:border-rose-500 transition-all duration-300 text-slate-700 font-medium shadow-sm hover:shadow-md group-hover:border-rose-300"
                       required
@@ -203,14 +231,14 @@ const AddLeave = () => {
 
               {/* Enhanced Description */}
               <div className="group">
-                <label htmlFor="description" className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
+                <label htmlFor="reason" className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
                   <div className="w-2 h-2 bg-gradient-to-r from-amber-400 to-orange-400 rounded-full"></div>
                   Description
                 </label>
                 <div className="relative">
                   <textarea
-                    id="description"
-                    name="description"
+                    id="reason"
+                    name="reason"
                     value={formData.description}
                     onChange={handleInputChange}
                     rows="5"
