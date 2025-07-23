@@ -24,7 +24,7 @@ const Sidebar = () => {
   const navItems = [
     { to: "/employee-dashboard", icon: FaTachometer, label: "Dashboard", end: true },
     { to: `/employee-dashboard/profile/${user._id}`, icon: FaUsers, label: "My Profile" },
-    { to: "/employee-dashboard/leaves", icon: FaBuilding, label: "Leave" },
+    { to: `/employee-dashboard/leaves/:${user._id}`, icon: FaBuilding, label: "Leave" },
     { to: `/employee-dashboard/salary/${user._id}`, icon: FaCalendarAlt, label: "Salary" },
     { to: "/employee-dashboard/settings", icon: FaCogs, label: "Settings" },
   ];

@@ -60,7 +60,7 @@ function App() {
             }>
               <Route index element = {<Summary />}></Route>
               <Route path='/employee-dashboard/profile/:id' element = {<View />}/>
-              <Route path='/employee-dashboard/leaves' element = {<LeaveList />}/>
+              <Route path='/employee-dashboard/leaves/:id' element = {<LeaveList />}/>
               <Route path='/employee-dashboard/add-leave' element = {<AddLeave />}/>
               <Route path='/employee-dashboard/salary/:id' element = {<ViewSalary />}/>
               <Route path='/employee-dashboard/settings' element = {<Setting />}/>
