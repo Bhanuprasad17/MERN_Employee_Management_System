@@ -117,7 +117,7 @@ export const EmployeeButtons = ({ Id, onEmployeeDelete }) => {
   };
 
   const handleLeave = () => {
-    navigate(`/admin-dashboard/leaves/${Id}`);
+    navigate(`/admin-dashboard/leave/${Id}`);
   };
 
   const handleView = () => {
