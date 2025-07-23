@@ -1,5 +1,6 @@
+// FRONTEND COMPONENT
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { FaSearch, FaPlus, FaUser } from 'react-icons/fa'
 import { useAuth } from '../../context/authContext'
 import axios from 'axios'
@@ -17,10 +18,15 @@ const List = () => {
   const [totalPages, setTotalPages] = useState(1)
   const [pagination, setPagination] = useState({})
 
+  const {empId} = useParams()
+
+  // Fixed: Better ID determination logic
+  const id = user.role === 'admin' ? empId || user._id : user._id
+
   // Fetch leaves data
   useEffect(() => {
     fetchLeaves()
-  }, [currentPage, statusFilter, typeFilter])
+  }, [currentPage, statusFilter, typeFilter, id]) // Added id as dependency
 
   const fetchLeaves = async () => {
     try {
@@ -42,22 +48,21 @@ const List = () => {
         params.append('leaveType', typeFilter)
       }
       
-      // Fixed: Include query parameters in the URL
-      const response = await axios.get(
-        `http://localhost:3000/api/leave/${user._id}?${params.toString()}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      )
+      // Include query parameters in the URL
+      const url = `http://localhost:3000/api/leave/${id}?${params.toString()}`
+      
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
       
       const data = response.data
       
       if (data.success) {
-        setLeaves(data.data)
-        setFilteredLeaves(data.data)
-        setPagination(data.pagination)
+        setLeaves(data.data || [])
+        setFilteredLeaves(data.data || [])
+        setPagination(data.pagination || {})
         setTotalPages(data.pagination?.totalPages || 1)
       } else {
         setError(data.message || 'Failed to fetch leaves')
@@ -79,15 +84,26 @@ const List = () => {
     }
   }
 
-  // Search functionality - now works on client side since server doesn't support search
+  // Search functionality - works on client side
   useEffect(() => {
     if (searchTerm) {
-      const filtered = leaves.filter(leave => 
-        leave.employeeId?._id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        leave.leaveType?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        leave.reason?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        leave.status?.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+      const filtered = leaves.filter(leave => {
+        const employeeId = leave.employeeId?.userId || leave.employeeId?._id || ''
+        const employeeName = leave.employeeId?.name || ''
+        const department = leave.employeeId?.department || ''
+        const leaveType = leave.leaveType || ''
+        const reason = leave.reason || ''
+        const status = leave.status || ''
+        
+        return (
+          employeeId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          employeeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          department.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          leaveType.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          reason.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          status.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      })
       setFilteredLeaves(filtered)
     } else {
       setFilteredLeaves(leaves)
@@ -119,6 +135,7 @@ const List = () => {
   }
 
   const formatDate = (date) => {
+    if (!date) return 'N/A'
     return new Date(date).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
@@ -127,6 +144,7 @@ const List = () => {
   }
 
   const calculateDays = (startDate, endDate) => {
+    if (!startDate || !endDate) return 0
     const start = new Date(startDate)
     const end = new Date(endDate)
     const diffTime = Math.abs(end - start)
@@ -138,14 +156,12 @@ const List = () => {
   const handleStatusFilterChange = (value) => {
     setStatusFilter(value)
     setCurrentPage(1)
-    // Clear search term when filter changes to avoid confusion
     setSearchTerm('')
   }
 
   const handleTypeFilterChange = (value) => {
     setTypeFilter(value)
     setCurrentPage(1)
-    // Clear search term when filter changes to avoid confusion
     setSearchTerm('')
   }
 
@@ -176,7 +192,7 @@ const List = () => {
               </div>
               <input 
                 type="text"
-                placeholder="Search by employee ID, leave type, reason, or status..."
+                placeholder="Search by employee name, ID, leave type, reason, or status..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-gray-50 focus:bg-white"
@@ -292,10 +308,13 @@ const List = () => {
                           </div>
                           <div>
                             <div className="font-medium text-gray-900">
-                              Employee ID: {leave.employeeId?._id?.slice(-8) || 'N/A'}
+                              {leave.employeeId?.name || 'N/A'}
                             </div>
                             <div className="text-sm text-gray-500">
-                              Dept: {leave.employeeId?.department?.slice(-8) || 'N/A'}
+                              ID: {leave.employeeId?.userId || leave.employeeId?._id || 'N/A'}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              Dept: {leave.employeeId?.department || 'N/A'}
                             </div>
                           </div>
                         </div>
@@ -345,10 +364,13 @@ const List = () => {
                       </div>
                       <div>
                         <div className="font-medium text-gray-900">
-                          Employee ID: {leave.employeeId?._id?.slice(-8) || 'N/A'}
+                          {leave.employeeId?.name || 'N/A'}
                         </div>
                         <div className="text-sm text-gray-500">
-                          Dept: {leave.employeeId?.department?.slice(-8) || 'N/A'}
+                          ID: {leave.employeeId?.userId || leave.employeeId?._id || 'N/A'}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          Dept: {leave.employeeId?.department || 'N/A'}
                         </div>
                       </div>
                     </div>
