@@ -41,7 +41,7 @@ const addLeave = async (req, res) => {
 
 
 
-const getLeaves = async (req, res) => {
+const getLeave = async (req, res) => {
     try {
         const { userId, status, leaveType } = req.query;
         
@@ -92,4 +92,33 @@ const getLeaves = async (req, res) => {
     }
 };
 
-export { addLeave, getLeaves };
+const getLeaves = async(req, res) => {
+    try {
+        const leaves = await Leave.find().populate({
+            path : "employeeId",
+            populate : [
+                {
+                    path : "department",
+                    select : "dep_name"
+                },
+                {
+                    path : "userId",
+                    select : "name"
+                }
+            ]
+        })
+        
+        return res.status(200).json({
+            success: true,
+            leaves: leaves  // Changed from 'data' to 'leaves' for consistency
+        });
+        
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            error: "Failed to fetch leaves"
+        });
+    }
+}
+export { addLeave, getLeave,getLeaves };

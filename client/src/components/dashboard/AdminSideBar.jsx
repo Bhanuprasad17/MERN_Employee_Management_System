@@ -20,7 +20,7 @@ const AdminSideBar = () => {
     { to: "/admin-dashboard", icon: FaTachometer, label: "Dashboard", end: true },
     { to: "/admin-dashboard/employees", icon: FaUsers, label: "Employee" },
     { to: "/admin-dashboard/departments", icon: FaBuilding, label: "Department" },
-    { to: "/admin-dashboard/leave", icon: FaCalendarAlt, label: "Leave" },
+    { to: "/admin-dashboard/leaves", icon: FaCalendarAlt, label: "Leave" },
     { to: "/admin-dashboard/salary/add", icon: FaMoneyBillWave, label: "Salary" },
     { to: "/admin-dashboard/settings", icon: FaCogs, label: "Settings" },
   ];
