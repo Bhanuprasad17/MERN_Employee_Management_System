@@ -3,6 +3,7 @@ import axios from "axios";
 import { useAuth } from "../../context/authContext";
 
 const Setting = () => {
+
   const {user} = useAuth()
   const [passwordData, setPasswordData] = useState({
     oldPassword: "",

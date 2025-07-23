@@ -173,7 +173,7 @@ export const EmployeeButtons = ({ Id, onEmployeeDelete }) => {
               </svg>
               Salary
             </button>
-            <button
+            {/* <button
               className="w-full text-left px-3 py-2 text-sm text-purple-600 hover:bg-purple-50 flex items-center gap-2 border-b border-gray-100"
               onClick={handleLeave}
             >
@@ -181,7 +181,7 @@ export const EmployeeButtons = ({ Id, onEmployeeDelete }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
               Leave
-            </button>
+            </button> */}
             <button
               className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2"
               onClick={handleDelete}
@@ -244,7 +244,7 @@ export const EmployeeButtons = ({ Id, onEmployeeDelete }) => {
         </button>
 
         {/* Leave Button */}
-        <button
+        {/* <button
           className="px-2 py-1 bg-gradient-to-r from-purple-500 to-purple-600 text-white text-xs 
                      font-medium rounded hover:from-purple-600 hover:to-purple-700 
                      transform hover:scale-105 transition-all duration-200 shadow-sm hover:shadow-md
@@ -256,7 +256,7 @@ export const EmployeeButtons = ({ Id, onEmployeeDelete }) => {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
           <span className="hidden xl:inline">Leave</span>
-        </button>
+        </button> */}
 
         {/* Delete Button */}
         <button
