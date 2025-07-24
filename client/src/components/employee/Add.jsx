@@ -42,7 +42,7 @@ const Add = () => {
 
 
      try {
-            const response = await axios.post('https://mern-employee-management-system-1.onrender.com/api/employee/add', formDataObj, {
+            const response = await axios.post('https://mern-employee-management-system-2.onrender.com/api/employee/add', formDataObj, {
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem('token')}`
                 }

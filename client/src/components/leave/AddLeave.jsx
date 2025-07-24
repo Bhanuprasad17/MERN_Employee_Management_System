@@ -61,7 +61,7 @@ const AddLeave = () => {
   const submitLeaveRequest = async () => {
     try {
       const response = await axios.post(
-        `https://mern-employee-management-system-1.onrender.com/api/leave/add`,
+        `https://mern-employee-management-system-2.onrender.com/api/leave/add`,
         formData, // Send the form data as the request body
         {
           headers: {

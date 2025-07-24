@@ -49,7 +49,7 @@ const List = () => {
       }
       
       // Include query parameters in the URL
-      const url = `https://mern-employee-management-system-1.onrender.com/api/leave/${id}?${params.toString()}`
+      const url = `https://mern-employee-management-system-2.onrender.com/api/leave/${id}?${params.toString()}`
       
       const response = await axios.get(url, {
         headers: {
