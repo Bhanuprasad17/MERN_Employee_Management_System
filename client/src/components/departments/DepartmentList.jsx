@@ -23,7 +23,7 @@ const DepartmentList = () => {
       setDep_loading(true);
       try {
         const response = await axios.get(
-          "https://mern-employee-management-system-2.onrender.com/api/department",
+          "https://mern-employee-management-system-3.onrender.com/api/department",
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

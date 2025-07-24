@@ -20,7 +20,7 @@ const View = () => {
             setError(null)
             console.log("Fetching salaries for employee ID:", id)
             
-            const response = await axios.get(`https://mern-employee-management-system-2.onrender.com/api/salary/${id}`, {
+            const response = await axios.get(`https://mern-employee-management-system-3.onrender.com/api/salary/${id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 }

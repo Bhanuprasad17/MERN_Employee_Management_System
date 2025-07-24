@@ -19,7 +19,7 @@ const AddDepartment = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('https://mern-employee-management-system-2.onrender.com/api/department/add', department, {
+            const response = await axios.post('https://mern-employee-management-system-3.onrender.com/api/department/add', department, {
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem('token')}`
                 }

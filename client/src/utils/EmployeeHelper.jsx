@@ -42,7 +42,7 @@ export const columns = [
 export const fetchDepartments = async () => {
   let departments;
   try {
-    const response = await axios.get("https://mern-employee-management-system-2.onrender.com/api/department", {
+    const response = await axios.get("https://mern-employee-management-system-3.onrender.com/api/department", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -62,7 +62,7 @@ export const fetchDepartments = async () => {
 export const fetchEmployees = async (id) => {
   let employees;
   try {
-    const response = await axios.get(`https://mern-employee-management-system-2.onrender.com/api/employee/department/${id}`, {
+    const response = await axios.get(`https://mern-employee-management-system-3.onrender.com/api/employee/department/${id}`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -87,7 +87,7 @@ export const EmployeeButtons = ({ Id, onEmployeeDelete }) => {
     if (window.confirm("Are you sure you want to delete this employee?")) {
       try {
         const response = await axios.delete(
-          `hhttps://mern-employee-management-system-2.onrender.com/api/employee/${Id}`,
+          `https://mern-employee-management-system-3.onrender.com/api/employee/${Id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

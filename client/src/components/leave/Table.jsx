@@ -13,7 +13,7 @@ const LeaveButton = ({ id, onUpdate }) => {
   const handleApprove = async () => {
     try {
       const response = await axios.put(
-        `https://mern-employee-management-system-2.onrender.com/api/leave/${id}/approve`,
+        `https://mern-employee-management-system-3.onrender.com/api/leave/${id}/approve`,
         {},
         {
           headers: {
@@ -33,7 +33,7 @@ const LeaveButton = ({ id, onUpdate }) => {
   const handleReject = async () => {
     try {
       const response = await axios.put(
-        `https://mern-employee-management-system-2.onrender.com/api/leave/${id}/reject`,
+        `https://mern-employee-management-system-3.onrender.com/api/leave/${id}/reject`,
         {},
         {
           headers: {
@@ -90,7 +90,7 @@ const Table = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        "https://mern-employee-management-system-2.onrender.com/api/leave",
+        "https://mern-employee-management-system-3.onrender.com/api/leave",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

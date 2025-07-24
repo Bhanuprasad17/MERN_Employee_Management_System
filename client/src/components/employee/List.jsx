@@ -21,7 +21,7 @@ const List = () => {
       setEmp_loading(true);
       try {
         const response = await axios.get(
-          "https://mern-employee-management-system-2.onrender.com/api/employee",
+          "https://mern-employee-management-system-3.onrender.com/api/employee",
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -39,7 +39,7 @@ const List = () => {
             profileImage: (
               <div className="flex items-center justify-center">
                 <img 
-                  src={`https://mern-employee-management-system-2.onrender.com/uploads/${emp.userId.profileImage}`} 
+                  src={`https://mern-employee-management-system-3.onrender.com/uploads/${emp.userId.profileImage}`} 
                   alt={emp.userId.name}
                   className="w-12 h-12 rounded-full object-cover border-2 border-gray-200 shadow-md"
                   onError={(e) => {

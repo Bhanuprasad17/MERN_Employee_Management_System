@@ -72,7 +72,7 @@ const Add = () => {
       };
 
       const response = await axios.post(
-        `https://mern-employee-management-system-2.onrender.com/api/salary/add`,
+        `https://mern-employee-management-system-3.onrender.com/api/salary/add`,
         salaryData,
         {
           headers: {
