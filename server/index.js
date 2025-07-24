@@ -22,6 +22,11 @@ dotenv.config()
 
 app.use(cors())
 app.use(express.json())
+app.get('/gettings',(req,res)=>
+{
+    console.log('hello iam ssk');
+    res.send('send by ssk')
+})
 
 // app.use(express.static('public/uploads'))
 // app.use('/uploads', express.static('uploads'))

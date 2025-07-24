@@ -15,7 +15,7 @@ const Detail = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `http://localhost:3000/api/leave/detail/${id}`,
+          `https://mern-employee-management-system-1.onrender.com/api/leave/detail/${id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -170,11 +170,11 @@ const Detail = () => {
                   <div className="relative inline-block mb-6">
                     {/* Debug: Add console log to check image path */}
                     {console.log('Profile Image Path:', leave.employeeId?.userId?.profileImage)}
-                    {console.log('Full Image URL:', `http://localhost:3000/uploads/${leave.employeeId?.userId?.profileImage}`)}
+                    {console.log('Full Image URL:', `https://mern-employee-management-system-1.onrender.com/uploads/${leave.employeeId?.userId?.profileImage}`)}
                     
                     {leave.employeeId?.userId?.profileImage ? (
                       <img
-                        src={`http://localhost:3000/uploads/${leave.employeeId.userId.profileImage}`}
+                        src={`https://mern-employee-management-system-1.onrender.com/uploads/${leave.employeeId.userId.profileImage}`}
                         alt="Employee Profile"
                         className="w-48 h-48 rounded-full object-cover border-4 border-white shadow-xl mx-auto"
                         onError={(e) => {

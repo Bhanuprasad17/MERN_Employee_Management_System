@@ -16,7 +16,7 @@ const EditDepartment = () => {
             setDep_loading(true);
             try {
                 const response = await axios.get(
-                    `http://localhost:3000/api/department/${id}`,
+                    `https://mern-employee-management-system-1.onrender.com/api/department/${id}`,
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -45,7 +45,7 @@ const EditDepartment = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.put(`http://localhost:3000/api/department/${id}`, department, {
+            const response = await axios.put(`https://mern-employee-management-system-1.onrender.com/api/department/${id}`, department, {
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem('token')}`
                 }

@@ -17,7 +17,7 @@ const Login = () => {
     console.log(email, password);
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/login",
+        "https://mern-employee-management-system-1.onrender.com/api/auth/login",
         { email, password }
       );
 

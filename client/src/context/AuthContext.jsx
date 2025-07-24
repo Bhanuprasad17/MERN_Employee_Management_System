@@ -21,7 +21,7 @@ const AuthContext = ({children}) => {
     }
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/verify",
+        "https://mern-employee-management-system-1.onrender.com/api/auth/verify",
         {},
         {
           headers: {

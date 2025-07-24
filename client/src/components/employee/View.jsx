@@ -11,7 +11,7 @@ const View = () => {
     const fetchEmployee = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/employee/${id}`,
+          `https://mern-employee-management-system-1.onrender.com/api/employee/${id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -50,7 +50,7 @@ const View = () => {
             {/* Profile Image */}
             <div className="flex justify-center">
               <img
-                src={`http://localhost:3000/uploads/${employee.userId.profileImage}`}
+                src={`https://mern-employee-management-system-1.onrender.com/uploads/${employee.userId.profileImage}`}
                 alt="Employee"
                 className="rounded-full w-60 h-60 object-cover border-4 border-gray-300 shadow-md"
               />

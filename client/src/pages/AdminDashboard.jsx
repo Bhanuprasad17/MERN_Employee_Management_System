@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import { useAuth } from "../context/AuthContext";
 import { toast, ToastContainer } from "react-toastify";
 import AdminSideBar from "../components/dashboard/AdminSideBar";
 import Navbar from "../components/dashboard/Navbar";
 import AdminSummary from "../components/dashboard/AdminSummary";
 import { Outlet } from "react-router-dom";
+import { useAuth } from "../context/authContext";
 
 const AdminDashboard = () => {
   const { user, loading } = useAuth();
