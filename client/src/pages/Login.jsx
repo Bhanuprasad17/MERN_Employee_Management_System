@@ -206,11 +206,11 @@ const Login = () => {
           </div>
 
           {/* Forgot Password Link */}
-          <div className="text-center mt-4">
+          {/* <div className="text-center mt-4">
             <a href="#" className="text-sm text-teal-600 hover:underline">
               Forgot Password?
             </a>
-          </div>
+          </div> */}
         </form>
       </div>
     </div>
