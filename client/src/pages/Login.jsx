@@ -57,6 +57,61 @@ const Login = () => {
     }
   };
 
+  const handleGuestLogin = async (userType) => {
+    let guestEmail, guestPassword;
+    
+    if (userType === "admin") {
+      guestEmail = "admin@gmail.com";
+      guestPassword = "123456";
+    } else if (userType === "employee") {
+      guestEmail = "bhanuprasadsuram0018@gmail.com";
+      guestPassword = "123456";
+    }
+
+    // Update the form fields for visual feedback
+    setEmail(guestEmail);
+    setPassword(guestPassword);
+    setError(null);
+
+    try {
+      const response = await axios.post(
+        "https://mern-employee-management-system-3.onrender.com/api/auth/login",
+        { email: guestEmail, password: guestPassword }
+      );
+
+      setError("");
+      if (response.data.success) {
+        toast.success(`Successfully logged in as Guest ${userType === "admin" ? "Admin" : "Employee"}!`);
+      }
+
+      login(response.data.user);
+
+      localStorage.setItem("token", response.data.token);
+      if (response.data.user.role == "admin") {
+        navigate("/admin-dashboard");
+      } else {
+        navigate("/employee-dashboard");
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.response) {
+        if (error.response.data && error.response.data.error) {
+          setError(error.response.data.error);
+          toast.error(error.response.data.error);
+        } else {
+          setError("Guest login failed. Please try again.");
+          toast.error("Guest login failed. Please try again.");
+        }
+      } else if (error.request) {
+        setError("Network error. Please check your connection.");
+        toast.error("Network error. Please check your connection.");
+      } else {
+        setError("An unexpected error occurred during guest login.");
+        toast.error("An unexpected error occurred during guest login.");
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center bg-gray-100">
       <ToastContainer position="top-right" autoClose={3000} />
@@ -128,6 +183,27 @@ const Login = () => {
           >
             Login
           </button>
+
+          {/* Guest Login Buttons */}
+          <div className="space-y-2">
+            <div className="text-center text-sm text-gray-600 mb-2">
+              Or try as guest:
+            </div>
+            <button
+              type="button"
+              onClick={() => handleGuestLogin("admin")}
+              className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-colors duration-200 text-sm"
+            >
+              Login as Guest Admin
+            </button>
+            <button
+              type="button"
+              onClick={() => handleGuestLogin("employee")}
+              className="w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 transition-colors duration-200 text-sm"
+            >
+              Login as Guest Employee
+            </button>
+          </div>
 
           {/* Forgot Password Link */}
           <div className="text-center mt-4">
