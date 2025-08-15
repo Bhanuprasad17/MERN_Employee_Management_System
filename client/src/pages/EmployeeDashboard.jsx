@@ -1,5 +1,5 @@
 import React from 'react'
-import Sidebar from '../components/employeeDashboard/SideBar'
+import Sidebar from '../components/employeeDashboard/Sidebar'
 import { Outlet } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import Navbar from '../components/dashboard/Navbar'
